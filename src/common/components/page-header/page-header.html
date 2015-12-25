@@ -1,0 +1,19 @@
+<div class="page-header">
+
+  <a
+    ng-if="back"
+    ng-href="{{back}}"
+    class="page-header-back">
+    <i icon="chevron-left"></i>
+    {{backLabel}}
+  </a>
+
+  <h1 translate
+    class="page-header-title">
+      {{header}}
+      <small ng-if="headerSmall">{{headerSmall}}</small>
+  </h1>
+
+  <ng-transclude></ng-transclude>
+
+</div>

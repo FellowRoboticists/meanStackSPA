@@ -1,0 +1,26 @@
+{
+  "vendor_js_src": [
+    "./bower_components/angular/angular.js",
+    "./bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
+    "./bower_components/angular-file-upload/dist/angular-file-upload.min.js",
+    "./bower_components/angular-hotkeys/build/hotkeys.js",
+    "./bower_components/angular-locker/dist/angular-locker.js",
+    "./bower_components/angular-messages/angular-messages.js",
+    "./bower_components/angular-rails-resource/angularjs-rails-resource.js",
+    "./bower_components/angular-sanitize/angular-sanitize.js",
+    "./bower_components/angular-ui-router/release/angular-ui-router.js",
+    "./bower_components/angular-validation-match/dist/angular-validation-match.js",
+    "./bower_components/angularUtils-pagination/dirPagination.js",
+    "./bower_components/autofill-event/src/autofill-event.js",
+    "./bower_components/lodash/lodash.js",
+    "./bower_components/ng-device-detector/ng-device-detector.js",
+    "./bower_components/re-tree/re-tree.js",
+    "./src/common/vendor/js/sails.io.js",
+    "./src/common/vendor/js/cycle.js",
+    "./src/common/vendor/js/naturalSortVersionDates.js"
+  ],
+  "vendor_css_src": [
+    "./bower_components/bootstrap/dist/css/bootstrap.css",
+    "./bower_components/angular-hotkeys/build/hotkeys.css"
+  ]
+}

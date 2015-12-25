@@ -1,0 +1,206 @@
+<form
+  name="editUser"
+  ng-submit="userCtrl.save(userCtrl.user)">
+
+  <div class="row">
+    <div class="col-lg-3 col-md-4 col-sm-5 col-xs-8">
+
+      <div
+        ng-if="userCtrl.session.user.permissions.manageUsers && !userCtrl.user.isCurrentUser"
+        class="form-group"
+        ng-class="{'has-error':editUser.account.$invalid && editUser.account.$touched}">
+          <label
+            for="user-account"
+            class="control-label">Account *</label>
+          <select required
+            id="user-account"
+            class="form-control"
+            name="account"
+            ng-model="userCtrl.user.account"
+            ng-options="account.id as account.name for account in userCtrl.accounts"></select>
+        <div
+          class="messages"
+          ng-messages="editUser.account.$error"
+          ng-if="editUser.account.$touched">
+            <div class="help-block" ng-message="required">Account is required</div>
+        </div>
+      </div>
+
+      <div
+        class="form-group"
+        ng-class="{'has-error':editUser.name.$invalid && editUser.name.$touched}">
+          <label
+            for="user-name"
+            class="control-label">Full Name *</label>
+          <input required
+            autocomplete="off"
+            id="user-name"
+            type="text"
+            class="form-control"
+            name="name"
+            ng-model="userCtrl.user.name">
+        <div
+          class="messages"
+          ng-messages="editUser.name.$error"
+          ng-if="editUser.name.$touched">
+            <div class="help-block" ng-message="required">Name is required</div>
+        </div>
+      </div>
+
+      <div
+        class="form-group"
+        ng-class="{'has-error':editUser.email.$invalid && editUser.email.$touched}">
+          <label
+            for="user-email"
+            class="control-label">Email *</label>
+          <input required
+            duplicate-email="{{userCtrl.user}}"
+            autocomplete="off"
+            id="user-email"
+            type="text"
+            class="form-control"
+            name="email"
+            ng-pattern="userCtrl.REGEX.EMAIL"
+            ng-model="userCtrl.user.email"
+            ng-model-options="{ debounce: { 'default': 500, 'blur': 0 } }">
+        <div
+          class="messages"
+          ng-messages="editUser.email.$error"
+          ng-if="editUser.email.$touched">
+            <div class="help-block" ng-message="required">Email is required</div>
+            <div class="help-block" ng-message="pattern">Invalid email format</div>
+            <div class="help-block" ng-message="duplicate_email">{{userCtrl.user.email}} is already in use</div>
+        </div>
+      </div>
+
+      <hr ng-if="userCtrl.user.id">
+
+      <div
+        class="form-group"
+        ng-class="{'has-error':editUser.password.$invalid && editUser.password.$touched}">
+        <label
+          for="user-password"
+          class="control-label">
+            <span ng-if="userCtrl.user.id">New</span>
+            Password
+            <span ng-if="!userCtrl.user.id">*</span>
+        </label>
+        <input
+          autocomplete="off"
+          id="user-password"
+          type="password"
+          class="form-control"
+          name="password"
+          ng-required="!userCtrl.user.id"
+          ng-model="userCtrl.user.password">
+        <div
+          class="messages"
+          ng-messages="editUser.password.$error"
+          ng-if="editUser.password.$touched">
+            <div class="help-block" ng-message="required">Password is required</div>
+        </div>
+      </div>
+
+      <div
+        class="form-group"
+        ng-class="{'has-error':editUser.confirmPassword.$invalid && editUser.confirmPassword.$touched}">
+        <label
+          for="user-confirmation"
+          class="control-label">
+            Confirm
+            <span ng-if="userCtrl.user.id">New</span>
+            Password
+            <span ng-if="!userCtrl.user.id">*</span>
+        </label>
+        <input
+          autocomplete="off"
+          id="user-confirmation"
+          type="password"
+          class="form-control"
+          name="confirmPassword"
+          match="userCtrl.user.password"
+          ng-required="!userCtrl.user.id"
+          ng-model="userCtrl.user.confirmation">
+        <div
+          class="messages"
+          ng-messages="editUser.confirmPassword.$error"
+          ng-if="editUser.confirmPassword.$touched">
+            <div class="help-block" ng-message="required">Confirm Password is required</div>
+            <div class="help-block" ng-message="match"><span ng-if="userCtrl.user.id">New</span> Password and Confirm <span ng-if="userCtrl.user.id">New</span> Password must match</div>
+        </div>
+      </div>
+
+    </div>
+    <div
+      ng-if="!userCtrl.user.id || userCtrl.session.user.permissions.manageUsers && !userCtrl.user.isCurrentUser"
+      class="col-lg-3 col-md-4 col-sm-5 col-xs-8">
+
+      <label>Account Owner</label>
+      <div class="checkbox">
+        <label>
+          <input
+            type="checkbox"
+            ng-model="userCtrl.user.accountOwner">
+          Owner
+        </label>
+      </div>
+
+      <label>Independent Contractor</label>
+      <div class="checkbox">
+        <label>
+          <input
+            type="checkbox"
+            ng-model="userCtrl.user.contractor">
+          Contractor
+        </label>
+      </div>
+
+      <label>Permissions</label>
+      <div class="checkbox">
+        <label>
+          <input
+            type="checkbox"
+            ng-model="userCtrl.user.permissions.manageUsers">
+          Manage users
+        </label>
+      </div>
+      <div class="checkbox disabled">
+        <label>
+          <input
+            type="checkbox"
+            ng-model="userCtrl.user.permissions.curateBooks">
+          Curate Books
+        </label>
+      </div>
+
+      <label>Lock User Profile</label>
+      <div class="checkbox">
+        <label>
+          <input
+            type="checkbox"
+            ng-model="userCtrl.user.locked">
+          Locked
+        </label>
+      </div>
+
+      <label>Terms of Service</label>
+      <div class="checkbox">
+        <label>
+          <input
+            type="checkbox"
+            ng-model="userCtrl.user.termsAccepted">
+          Accepted
+        </label>
+      </div>
+
+    </div>
+  </div>
+
+  <button
+    type="submit"
+    ng-disabled="editUser.$invalid"
+    class="btn btn-primary">Save</button>
+
+</form>
+
+<!-- <pre>{{userCtrl.user|json}}</pre> -->

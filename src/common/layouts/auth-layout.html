@@ -1,0 +1,37 @@
+<main-nav>
+  <ul
+    class="nav navbar-nav"
+    ng-show="app.session.jwtToken">
+      <li
+        ng-if="app.session.user.permissions.manageUsers"
+        ng-class="{active: app.$state.includes('app.users')}">
+        <a href="#/users">
+          <i icon="user"></i> Users
+        </a>
+      </li>
+  </ul>
+  <ul class="nav navbar-nav navbar-right">
+    <li uib-dropdown>
+      <a href uib-dropdown-toggle><i icon="user"></a>
+      <ul class="dropdown-menu">
+        <li><a href="#/profile">Profile</a></li>
+        <li><a href ng-click="app.logout()">Sign-out</a></li>
+      </ul>
+    </li>
+  </ul>
+</main-nav>
+
+<div class="container-fluid">
+
+  <ui-view></ui-view>
+
+  <hr>
+
+  <p
+    ng-if="!app.loader.active"
+    class="center fade-in">
+    <a href="mailto:naiveroboticist@gmail.com?subject=Feedback or Support Request">Feedback/Support</a> |
+  </p>
+  <p class="center text-muted"><small>MEAN Stack SPA v{{app.appVersion.version}}</small></p>
+
+</div>

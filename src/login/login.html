@@ -1,0 +1,78 @@
+
+<form
+  name="login"
+  ng-submit="loginCtrl.login(loginCtrl.user)"
+  autocomplete="off"
+  style="margin-top:10%">
+
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+
+      <notifications></notifications>
+
+      <div class="panel panel-primary login-panel">
+
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <h4 class="center">
+              <i icon="cloud"></i>
+              Big Horn Vault
+            </h4>
+          </h3>
+        </div>
+
+        <div class="panel-body">
+
+          <!--Email-->
+          <div
+            class="form-group"
+            ng-class="{'has-error':login.email.$invalid && login.email.$touched}">
+              <input required
+                type="text"
+                name="email"
+                ng-model="loginCtrl.user.email"
+                class="form-control"
+                placeholder="email"
+                autocomplete="off"
+                ng-pattern="loginCtrl.REGEX.EMAIL">
+            <div
+              class="messages"
+              ng-messages="login.email.$error"
+              ng-if="login.email.$touched">
+                <div class="help-block" ng-message="required">Email is required</div>
+                <div class="help-block" ng-message="pattern">Must be a valid email address</div>
+            </div>
+          </div>
+
+          <!--Password-->
+          <div
+            class="form-group"
+            ng-class="{'has-error':login.password.$invalid && login.password.$touched}">
+              <input required
+                type="password"
+                name="password"
+                ng-model="loginCtrl.user.password"
+                class="form-control"
+                placeholder="password"
+                autocomplete="off">
+            <div
+              class="messages"
+              ng-messages="login.password.$error"
+              ng-if="login.password.$touched">
+                <div class="help-block" ng-message="required">Password is required</div>
+            </div>
+          </div>
+
+          <input
+            type="submit"
+            value="Sign-in"
+            ng-disabled="login.$invalid"
+            class="btn btn-primary">
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</form>

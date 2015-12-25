@@ -31,3 +31,13 @@ npm-debug.log
 
 # Vim files
 *.swp
+
+# Gulp stuff
+dist
+prod
+
+# Compiled SPA stuff
+public/css
+public/fonts
+public/index.html
+public/js

@@ -1,0 +1,23 @@
+<span class="permission-icons">
+
+  <span
+    class="permission-icon"
+    ng-repeat="permission in permissionsCtrl.permissions"
+    ng-switch="permissionsCtrl.user[permission.attribute]">
+
+    <!--Module enabled-->
+    <i
+      icon="{{permission.icon}}"
+      uib-tooltip="{{permission.tooltip}}"
+      tooltip-placement="right"
+      tooltip-append-to-body="true"
+      ng-switch-when="true"></i>
+
+    <!--Module disabled-->
+    <i
+      icon="minus"
+      ng-switch-when="false"></i>
+
+  </span>
+
+</span>

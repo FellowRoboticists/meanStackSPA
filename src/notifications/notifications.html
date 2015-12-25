@@ -1,0 +1,23 @@
+<div class="notifications">
+
+  <div
+    ng-repeat="(key,val) in notifications.factory.notifications.persistent"
+    class="alert alert-{{key}} fade-in">
+      <i class="alert-icon alert-{{key}}-icon glyphicon glyphicon-{{notifications.types[key]}}"></i>
+      <p ng-repeat="msg in val" ng-bind-html="msg"></p>
+  </div>
+
+  <div
+    ng-repeat="(key,val) in notifications.factory.notifications.currentRoute"
+    class="alert alert-{{key}} fade-in">
+      <i class="alert-icon alert-{{key}}-icon glyphicon glyphicon-{{notifications.types[key]}}"></i>
+      <button
+        class="close"
+        type="button"
+        ng-click="notifications.factory.clearByType(key)"
+        data-dismiss="alert"
+        aria-hidden="true">&times;</button>
+      <p ng-repeat="msg in val" ng-bind-html="msg"></p>
+  </div>
+
+</div>
