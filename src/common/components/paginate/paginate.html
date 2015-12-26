@@ -1,0 +1,53 @@
+<div class="pagination">
+
+  <span
+    class="text-muted"
+    ng-show="pagination.current == 1">
+    <span icon="step-backward"></span>
+  </span>
+
+  <a href
+    uib-tooltip="skip to start"
+    ng-click="setCurrent(1)"
+    ng-hide="pagination.current == 1">
+    <span icon="step-backward"></span>
+  </a>
+
+  <span
+    icon="chevron-left"
+    class="text-muted"
+    ng-show="pagination.current == 1"></span>
+
+  <a href
+    uib-tooltip="previous"
+    icon="chevron-left"
+    ng-click="setCurrent(pagination.current - 1)"
+    ng-hide="pagination.current == 1"></a>
+
+  <span>{{range.lower}}-{{range.upper}} of {{range.total}}</span>
+
+  <a href
+    uib-tooltip="next"
+    icon="chevron-right"
+    ng-click="setCurrent(pagination.current + 1)"
+    ng-hide="pagination.current == pagination.last"></a>
+
+  <span
+    icon="chevron-right"
+    class="text-muted"
+    ng-show="pagination.current == pagination.last"></span>
+
+  <a href
+    uib-tooltip="skip to end"
+    ng-click="setCurrent(pagination.last)"
+    ng-hide="pagination.current == pagination.last">
+    <span icon="step-forward"></span>
+  </a>
+
+  <span
+    class="text-muted"
+    ng-show="pagination.current == pagination.last">
+    <span icon="step-forward"></span>
+  </span>
+
+</div>

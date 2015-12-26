@@ -4,7 +4,7 @@ angular
 
   .module( "app.user" )
 
-  .controller( "EditUserCtrl", ($state, User, Account, NotificationsFactory, SessionFactory, Collection, $interpolate, REGEX, MESSAGES) ->
+  .controller( "EditUserCtrl", ($state, User, NotificationsFactory, SessionFactory, Collection, $interpolate, REGEX, MESSAGES) ->
 
     vm = @
 
@@ -22,18 +22,6 @@ angular
           $interpolate(MESSAGES.CRUD.ERROR.RETRIEVE)({name:"User"})
         )
         $state.go("app.users.list")
-      )
-
-    #
-    # Get account types
-    Account
-      .query()
-      .then( (accounts) ->
-        vm.accounts = new Collection.fromArray(accounts).sortBy("name")
-      ,(error) ->
-        NotificationsFactory.error(
-          $interpolate(MESSAGES.CRUD.ERROR.RETRIEVE)({name:"Accounts"})
-        )
       )
 
     #

@@ -1,4 +1,5 @@
 var express = require('express');
+var mongoose = require('mongoose');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -7,11 +8,32 @@ var bodyParser = require('body-parser');
 var requireDir = require('require-dir');
 
 // ##############################################################
+// Pull in all the models
+var models = requireDir('./models');
+// Put all the models into the global namespace
+for (var model in models) {
+  console.log("Registering mode: %j", model);
+  Object.defineProperty(Object.prototype,
+                        model,
+                        {
+                          set: function() {},
+                          get: function() { return models[model]; },
+                          configurable: true
+  });
+}
+
+// ##############################################################
 // Pull in all the controllers
 var controllers = requireDir('./routes');
 
 // ##############################################################
-// Pull in all the models
+// Mongoose settings
+
+// Tell mongoose to use the ES6 Promise
+mongoose.Promise = global.Promise;
+
+// Connect. The URL should be externalized to a configuration file
+mongoose.connect("mongodb://localhost/meanStackSPA");
 
 var app = express();
 
