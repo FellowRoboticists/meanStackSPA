@@ -44,10 +44,11 @@ angular
       # Send snapshot
       send: (error, data={}) ->
         message = @getSnapshot(error, data)
-        try
-          $http.post(url, message)
-        catch error
-          $log.debug error
-        finally
-          $log.debug message
+        console.log("Would have sent error: %j", message);
+        #try
+          #$http.post(url, message)
+        #catch error
+          #$log.debug error
+        #finally
+          #$log.debug message
   )

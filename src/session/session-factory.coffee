@@ -25,7 +25,7 @@ angular
     vm.destroy = ->
       session = @
       $q( (resolve) ->
-        ['version','jwtToken','user'].forEach( (attr) ->
+        ['version','user'].forEach( (attr) ->
           delete session[attr]
         )
         locker.forget(__storageKey)
@@ -53,7 +53,7 @@ angular
     Object.defineProperties(vm,
       'isValid':
         get: ->
-          @jwtToken?
+          @user?
         enumerable: true
     )
 
@@ -62,7 +62,6 @@ angular
     vm.toJSON = ->
       return {} unless @isValid
       'version': @version
-      'jwtToken': @jwtToken
       'user': @user
 
     #

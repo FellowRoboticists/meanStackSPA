@@ -30,7 +30,6 @@
       <col>
       <col style="width:120px">
       <col>
-      <col>
       <col class="icon-column">
     </colgroup>
 
@@ -39,7 +38,6 @@
         <th sort-column="'name'">Name</th>
         <th>Permissions</th>
         <th sort-column="'email'">Email</th>
-        <th>Account</th>
         <th></th>
       </tr>
     </thead>
@@ -69,7 +67,6 @@
             user="::user"></permission-icons>
         </td>
         <td>{{::user.email}}</td>
-        <td>{{::user.account|accountName}}</td>
         <td class="center">
           <button
             uib-tooltip="Delete user"
@@ -85,20 +82,5 @@
   </table>
 
   <dir-pagination-controls ng-if="usersCtrl.users.length > usersCtrl.PAGINATION_LIMIT"></dir-pagination-controls>
-
-  <div
-    ng-if="usersCtrl.manageUsers"
-    class="alert alert-warning form-inline">
-    <div class="form-group">
-      <button
-        type="button"
-        class="btn btn-warning"
-        ng-click="usersCtrl.confirmTermsReset()">
-          <i icon="ban-circle"></i>
-          Reset Terms of Service
-      </button>
-      <label>to force all users to accept the terms again...</label>
-    </div>
-  </div>
 
 </div>

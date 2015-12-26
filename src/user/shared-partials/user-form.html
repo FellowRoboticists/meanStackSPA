@@ -6,27 +6,6 @@
     <div class="col-lg-3 col-md-4 col-sm-5 col-xs-8">
 
       <div
-        ng-if="userCtrl.session.user.permissions.manageUsers && !userCtrl.user.isCurrentUser"
-        class="form-group"
-        ng-class="{'has-error':editUser.account.$invalid && editUser.account.$touched}">
-          <label
-            for="user-account"
-            class="control-label">Account *</label>
-          <select required
-            id="user-account"
-            class="form-control"
-            name="account"
-            ng-model="userCtrl.user.account"
-            ng-options="account.id as account.name for account in userCtrl.accounts"></select>
-        <div
-          class="messages"
-          ng-messages="editUser.account.$error"
-          ng-if="editUser.account.$touched">
-            <div class="help-block" ng-message="required">Account is required</div>
-        </div>
-      </div>
-
-      <div
         class="form-group"
         ng-class="{'has-error':editUser.name.$invalid && editUser.name.$touched}">
           <label
@@ -135,26 +114,6 @@
       ng-if="!userCtrl.user.id || userCtrl.session.user.permissions.manageUsers && !userCtrl.user.isCurrentUser"
       class="col-lg-3 col-md-4 col-sm-5 col-xs-8">
 
-      <label>Account Owner</label>
-      <div class="checkbox">
-        <label>
-          <input
-            type="checkbox"
-            ng-model="userCtrl.user.accountOwner">
-          Owner
-        </label>
-      </div>
-
-      <label>Independent Contractor</label>
-      <div class="checkbox">
-        <label>
-          <input
-            type="checkbox"
-            ng-model="userCtrl.user.contractor">
-          Contractor
-        </label>
-      </div>
-
       <label>Permissions</label>
       <div class="checkbox">
         <label>
@@ -162,14 +121,6 @@
             type="checkbox"
             ng-model="userCtrl.user.permissions.manageUsers">
           Manage users
-        </label>
-      </div>
-      <div class="checkbox disabled">
-        <label>
-          <input
-            type="checkbox"
-            ng-model="userCtrl.user.permissions.curateBooks">
-          Curate Books
         </label>
       </div>
 
@@ -180,16 +131,6 @@
             type="checkbox"
             ng-model="userCtrl.user.locked">
           Locked
-        </label>
-      </div>
-
-      <label>Terms of Service</label>
-      <div class="checkbox">
-        <label>
-          <input
-            type="checkbox"
-            ng-model="userCtrl.user.termsAccepted">
-          Accepted
         </label>
       </div>
 

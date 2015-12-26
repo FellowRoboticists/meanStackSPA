@@ -9,7 +9,7 @@ angular
     class User extends RailsResource
 
       @configure
-        url: '/user'
+        url: '/users'
 
       constructor: (data) ->
         super(data)

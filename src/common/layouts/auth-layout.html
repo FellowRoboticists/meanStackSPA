@@ -1,7 +1,7 @@
 <main-nav>
   <ul
     class="nav navbar-nav"
-    ng-show="app.session.jwtToken">
+    ng-show="app.session.user">
       <li
         ng-if="app.session.user.permissions.manageUsers"
         ng-class="{active: app.$state.includes('app.users')}">

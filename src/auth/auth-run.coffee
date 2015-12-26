@@ -12,7 +12,7 @@ angular
       if SessionFactory.isValid
         if toState.name is "app.login"
           event.preventDefault()
-          $state.go("app.books.list")
+          $state.go("app.users.list")
       else
         if toState.name isnt "app.login"
           event.preventDefault()

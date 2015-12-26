@@ -21,7 +21,7 @@ angular
               $interpolate(LOGIN.MESSAGES.LOCKED)({name:item})
             )
           else
-            $state.go("app.books.list")
+            $state.go("app.users.list")
         , (error) ->
           NotificationsFactory.error(LOGIN.MESSAGES.BAD_CREDENTIALS)
         )

@@ -8,7 +8,7 @@ angular
 
     login: (credentials) ->
       $http
-        .post( "/session", credentials )
+        .post( "/token", credentials )
         .then( (response) ->
           SessionFactory.create(response.data).then( (session) ->
             $rootScope.$emit("user:login", session)
@@ -18,7 +18,7 @@ angular
 
     logout: ->
       $http
-        .delete( "/session" )
+        .delete( "/token" )
         .finally( ->
           SessionFactory.destroy().then( (session) ->
             $rootScope.$emit("user:logout", session)
