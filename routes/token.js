@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var authentication = require('../services/authentication');
 
 // Set up the JWT token for authentication
 router.post('/', function(req, res, next) {
@@ -14,6 +15,8 @@ router.post('/', function(req, res, next) {
         var obj = {
           user: user
         };
+        // Set up the cookies we need for authentication
+        authentication.createJWTToken(user, res);
         res.json(obj);
       });
     }).

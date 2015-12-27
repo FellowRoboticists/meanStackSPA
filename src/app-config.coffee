@@ -6,6 +6,8 @@ angular
 
   .config( ($httpProvider, $urlRouterProvider, $stateProvider, $compileProvider, $logProvider, RailsResourceProvider, railsSerializerProvider, paginationTemplateProvider) ->
 
+    $httpProvider.interceptors.push("AuthInterceptor")
+
     #
     # Resource model configs
     railsSerializerProvider

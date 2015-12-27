@@ -22,6 +22,7 @@
     "angular-locker": "2.0.3",
     "angular-ui-router": "0.2.15",
     "angular-bootstrap": "0.14.3",
+    "angular-cookies": "1.4.8",
     "angular-rails-resource": "2.0.0",
     "angular-file-upload": "2.2.0",
     "angular-validation-match": "1.5.2",

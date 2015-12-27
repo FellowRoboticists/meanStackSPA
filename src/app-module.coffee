@@ -12,11 +12,13 @@ angular
     "rails",
     "ui.router",
     "ui.bootstrap",
+    "ngCookies",
     "ngMessages",
     "naturalSort",
     "ng.deviceDetector",
 
     "app.session",
+    "app.authinterceptor",
     "app.auth",
     "app.constants",
     "app.components",

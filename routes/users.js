@@ -1,15 +1,17 @@
 var express = require('express');
 var router = express.Router();
+var authentication = require('../services/authentication');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  // res.send('respond with a resource');
+router.get('/', 
+           authentication.processJWTToken,
+           authentication.verifyAuthenticated,
+           function(req, res, next) {
   User.find({}).exec().
     then(function(users) {
       console.log("Users: %j", users);
       res.json(users);
     });
-  // res.json([]); // Send an empty array for now..
 });
 
 router.param('user', function(req, res, next, id) {
@@ -22,12 +24,19 @@ router.param('user', function(req, res, next, id) {
     catch(next);
 });
 
-router.get('/:user', function(req, res, next) {
+router.get('/:user', 
+           authentication.processJWTToken,
+           authentication.verifyAuthenticated,
+           function(req, res, next) {
   res.json(req.user);
 });
 
 /* Create user */
-router.post('/', function(req, res, next) {
+router.post('/', 
+           authentication.processJWTToken,
+           authentication.verifyAuthenticated,
+           authentication.verifyRequest,
+            function(req, res, next) {
   console.log("Create user...%j", req.body);
 
   var user = new User(req.body);
@@ -42,7 +51,11 @@ router.post('/', function(req, res, next) {
   // res.json([]);
 });
 
-router.put('/:user', function(req, res, next) {
+router.put('/:user', 
+           authentication.processJWTToken,
+           authentication.verifyAuthenticated,
+           authentication.verifyRequest,
+           function(req, res, next) {
   var user = req.user;
 
   console.log("User: %j", user);
@@ -66,7 +79,11 @@ router.put('/:user', function(req, res, next) {
     });
 });
 
-router.delete('/:user', function(req, res, next) {
+router.delete('/:user', 
+           authentication.processJWTToken,
+           authentication.verifyAuthenticated,
+           authentication.verifyRequest,
+              function(req, res, next) {
   User.remove({ _id: req.user._id }).
     then(function(u) {
       res.json(req.user);

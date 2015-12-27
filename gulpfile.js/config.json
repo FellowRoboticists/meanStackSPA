@@ -1,6 +1,7 @@
 {
   "vendor_js_src": [
     "./bower_components/angular/angular.js",
+    "./bower_components/angular-cookies/angular-cookies.js",
     "./bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
     "./bower_components/angular-file-upload/dist/angular-file-upload.min.js",
     "./bower_components/angular-hotkeys/build/hotkeys.js",
