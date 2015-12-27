@@ -1,11 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var authentication = require('../services/authentication');
 
 // Set up the JWT token for authentication
 router.post('/', function(req, res, next) {
-  console.log(`Email: ${req.body.email}`);
-  console.log(`Password: ${req.body.password}`);
   User.findOne({email: req.body.email}).exec().
     then(function(user) {
       if (! user) { return res.status(409).send("Invalid credentials"); }
@@ -24,18 +21,6 @@ router.post('/', function(req, res, next) {
       console.log(err.stack);
       res.status(500).send(err.message);
     });
-
-  // At this point we're not really checking the for authentication.
-  // Just let it go.
-  //res.json({ 
-    //user: { 
-      //name: 'Jimmy',
-      //email: 'test@mail.com',
-      //permissions: {
-        //manageUsers: true
-      //}
-    //} 
-  //});
 });
 
 router.delete('/', function(req, res, next) {

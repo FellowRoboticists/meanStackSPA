@@ -12,7 +12,7 @@ var requireDir = require('require-dir');
 var models = requireDir('./models');
 // Put all the models into the global namespace
 for (var model in models) {
-  console.log("Registering mode: %j", model);
+  console.log("Registering model: %j", model);
   Object.defineProperty(Object.prototype,
                         model,
                         {
@@ -22,6 +22,32 @@ for (var model in models) {
   });
 }
 
+// ##############################################################
+// Pull in all the services...
+var services = requireDir('./services');
+// Put all the services into the global namespace
+for (var service in services) {
+  console.log("Registering service: %j", service);
+  Object.defineProperty(Object.prototype,
+                        service,
+                        {
+                          set: function() {},
+                          get: function() { return services[service]; },
+                          configurable: true
+  });
+}
+
+// ##############################################################
+// Pull in all the configurations
+var configurations = requireDir('./config');
+// Register all the configurations with the globl namespace under config
+Object.defineProperty(Object.prototype,
+                      'config',
+                      {
+                        set: function() {},
+                        get: function() { return configurations; },
+                        configurable: true
+});
 // ##############################################################
 // Pull in all the controllers
 var controllers = requireDir('./routes');

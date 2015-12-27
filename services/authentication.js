@@ -2,7 +2,6 @@ module.exports = (function() {
 
   var mongoose = require('mongoose');
   var jwt = require('jwt-simple');
-  var secrets = require('../config/secrets');
 
   var createJWTToken = function(user, res) {
     var payload = {
@@ -11,7 +10,7 @@ module.exports = (function() {
       csrfToken: new mongoose.Types.ObjectId().toString()
     };
 
-    var token = jwt.encode(payload, secrets.jwtSecret);
+    var token = jwt.encode(payload, config.secrets.jwtSecret);
 
     if (res) {
       // If a response object was passed, set up the cookies
@@ -32,7 +31,7 @@ module.exports = (function() {
 
     var payload = null;
     try {
-      payload = jwt.decode(jwtToken, secrets.jwtSecret);
+      payload = jwt.decode(jwtToken, config.secrets.jwtSecret);
     } catch(ex) {
       return res.status(403).send(ex.message);
     }

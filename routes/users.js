@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var authentication = require('../services/authentication');
 
 /* GET users listing. */
 router.get('/', 
@@ -9,7 +8,6 @@ router.get('/',
            function(req, res, next) {
   User.find({}).exec().
     then(function(users) {
-      console.log("Users: %j", users);
       res.json(users);
     });
 });
@@ -37,7 +35,6 @@ router.post('/',
            authentication.verifyAuthenticated,
            authentication.verifyRequest,
             function(req, res, next) {
-  console.log("Create user...%j", req.body);
 
   var user = new User(req.body);
   user.save().
@@ -47,8 +44,6 @@ router.post('/',
           res.json(users);
         });
     });
-
-  // res.json([]);
 });
 
 router.put('/:user', 
@@ -57,8 +52,6 @@ router.put('/:user',
            authentication.verifyRequest,
            function(req, res, next) {
   var user = req.user;
-
-  console.log("User: %j", user);
 
   user.name = req.body.name;
   user.email = req.body.email;
