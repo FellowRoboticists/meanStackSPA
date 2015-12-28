@@ -24,7 +24,13 @@ router.post('/', function(req, res, next) {
 });
 
 router.delete('/', function(req, res, next) {
-  // We have nothing really to do on logout...
+  // The key thing here is to remove the authentication/CSRF
+  // cookies. Basically, this clears the cookie text and sets
+  // the expiration to something in the past. This will force
+  // the browser to remove these cookies from the domain.
+  res.clearCookie('JWT-TOKEN');
+  res.clearCookie('XSRF-TOKEN');
+
   res.json({});
 });
 
