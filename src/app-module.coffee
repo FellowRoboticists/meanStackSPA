@@ -16,6 +16,7 @@ angular
     "ngMessages",
     "naturalSort",
     "ng.deviceDetector",
+    "btford.socket-io",
 
     "app.session",
     "app.authinterceptor",

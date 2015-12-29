@@ -23,5 +23,11 @@ angular
         NotificationsFactory.error MESSAGES.LOGOUT_ERROR
       )
 
+    vm.sendMessage = ->
+      console.log("Sending message")
+      AuthService.sendMessage().then( (response) ->
+        console.log("Sent the message")
+      )
+
     return
   )

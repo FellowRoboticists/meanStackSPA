@@ -4,9 +4,9 @@ angular
 
   .module( "app.services" )
 
-  .factory( "socket", ($rootScope) ->
+  .factory( "socket", ($rootScope, socketFactory) ->
 
-    socket = io.sails.connect()
+    socket = socketFactory()
 
     on: (eventName, callback) ->
       socket.on(eventName, ->
@@ -24,4 +24,6 @@ angular
             callback.apply(socket, args)
         )
       )
+
+    socket
   )

@@ -21,6 +21,7 @@
     "angular-mocks": "1.4.8",
     "angular-locker": "2.0.3",
     "angular-ui-router": "0.2.15",
+    "angular-socket-io": "~0.7.0",
     "angular-bootstrap": "0.14.3",
     "angular-cookies": "1.4.8",
     "angular-rails-resource": "2.0.0",

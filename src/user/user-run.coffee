@@ -10,6 +10,7 @@ angular
     #
     # Log out user if session terminated
     socket.on("user:logged_out", (sessionsObj) ->
+      $log.debug "Received a message"
       return false unless SessionFactory.isValid
       $log.debug "Logout blast: #{JSON.stringify(sessionsObj)}"
       if !!sessionsObj.numSessions and _.contains(sessionsObj.sessions, SessionFactory.sessionId)

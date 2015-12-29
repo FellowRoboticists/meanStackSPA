@@ -26,4 +26,11 @@ angular
           )
         )
 
+    sendMessage: ->
+      $http
+        .post( "/messages", { msg: "Just Say It" })
+        .then( (response) ->
+          console.log("Got response: %j", response)
+        )
+
   )
