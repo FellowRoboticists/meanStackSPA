@@ -23,9 +23,7 @@ angular
       User
         .query()
         .then( (users) ->
-          console.log("The users: %j", users)
           vm.users = new Collection.fromArray(users).sortBy("name")
-          console.log("The users: %j", vm.users)
         ,(error) ->
           NotificationsFactory.error(
             $interpolate(MESSAGES.CRUD.ERROR.RETRIEVE)({name:"Users"})

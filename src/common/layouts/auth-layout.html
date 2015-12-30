@@ -9,6 +9,12 @@
           <i icon="user"></i> Users
         </a>
       </li>
+      <li
+        ng-class="{active: app.$state.includes('app.documents')}">
+        <a href="#/documents">
+          <i icon="book"></i> Documents
+        </a>
+      </li>
       <li>
         <a href ng-click="app.sendMessage()">Message</a>
       </li>

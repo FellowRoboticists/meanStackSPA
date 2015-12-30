@@ -27,5 +27,6 @@ angular
     "app.notifications",
     "app.errors",
     "app.login",
-    "app.user"
+    "app.user",
+    "app.document"
   ])

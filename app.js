@@ -12,14 +12,7 @@ var requireDir = require('require-dir');
 var models = requireDir('./models');
 // Put all the models into the global namespace
 for (var model in models) {
-  console.log("Registering model: %j", model);
-  Object.defineProperty(Object.prototype,
-                        model,
-                        {
-                          set: function() {},
-                          get: function() { return models[model]; },
-                          configurable: true
-  });
+  global[model] = models[model];
 }
 
 // ##############################################################
@@ -27,27 +20,15 @@ for (var model in models) {
 var services = requireDir('./services');
 // Put all the services into the global namespace
 for (var service in services) {
-  console.log("Registering service: %j", service);
-  Object.defineProperty(Object.prototype,
-                        service,
-                        {
-                          set: function() {},
-                          get: function() { return services[service]; },
-                          configurable: true
-  });
+  global[service] = services[service];
 }
 
 // ##############################################################
 // Pull in all the configurations
 var configurations = requireDir('./config');
 // Register all the configurations with the globl namespace under config
-Object.defineProperty(Object.prototype,
-                      'config',
-                      {
-                        set: function() {},
-                        get: function() { return configurations; },
-                        configurable: true
-});
+global.config = configurations;
+
 // ##############################################################
 // Pull in all the controllers
 var controllers = requireDir('./routes');
@@ -79,6 +60,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/token', controllers.token);
 app.use('/users', controllers.users);
 app.use('/messages', controllers.messages);
+// app.use('/documents', controllers.documents);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

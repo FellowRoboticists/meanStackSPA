@@ -1,0 +1,47 @@
+<page-header
+  header="Add Document"
+  back="#/documents"
+  back-label="Documents">
+</page-header>
+
+<notifications></notifications>
+
+<div class="row">
+  <div class="col-lg-3 col-md-4 col-sm-5 col-xs-8">
+
+    <form name="addDocument">
+
+      <div
+        class="form-group">
+        <label
+          for="document-file"
+          class="control-label">
+          Upload Document *
+        </label>
+        <input autofocus required nv-file-select valid-file-input
+          id=document-file"
+          type="file"
+          class=form-control"
+          name="documentFile"
+          ng-model="addDocumentCtrl.book.file"
+          uploader="addDocumentCtrl.uploader">
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        ng-disabled="addDocument.$invalid"
+        ng-click="addDocumentCtrl.uploader.uploadAll()">
+        Save
+      </button>
+
+      <a href="#/documents"
+         class="btn btn-default">
+        Cancel
+      </a>
+    </form>
+
+  </div>
+
+</div>
+

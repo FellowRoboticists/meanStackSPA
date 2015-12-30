@@ -1,0 +1,35 @@
+<form class="delete-document-modal">
+
+  <div class="modal-header">
+    <h3 class="modal-title">
+      <i icon="warning-sign"></i>
+      Delete User
+    </h3>
+  </div>
+
+  <div class="modal-body">
+    <p>Are you sure you want to delete "<strong>{{documentCtrl.document.name}}</strong>"? This <strong>CANNOT</strong> be undone!</p>
+    <p>To confirm delete, type in the document name exactly as it appears above:</p>
+    <input autofocus
+      type="text"
+      autocomplete="off"
+      ng-modal="documentCtrl.name"
+      placeholder="confirm document name..."
+      class="form-control">
+  </div>
+
+  <div class="modal-footer">
+    <button
+       type="submit"
+       class="btn btn-danger"
+       ng-disabled="documentCtrl.name!==documentCtrl.document.name"
+       ng-click="documentCtrl.delete()">
+      Delete
+    </button>
+    <button
+       class="btn btn-default"
+       ng-click="documentCtrl.cancel()">
+      Cancel
+    </button>
+  </div>
+</form>
