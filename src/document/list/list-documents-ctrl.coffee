@@ -4,7 +4,7 @@ angular
 
   .module( "app.document" )
 
-  .controller( "ListDocumentsCtrl", ($state, Document, Collection, SessionFactory, $interpolate, $uibModal, loader, PAGINATION_LIMIT, MESSAGES) ->
+  .controller( "ListDocumentsCtrl", ($state, Document, Collection, SessionFactory, NotificationsFactory, $interpolate, $uibModal, loader, PAGINATION_LIMIT, MESSAGES) ->
 
     vm = @
 
@@ -20,7 +20,7 @@ angular
         .then( (documents) ->
           vm.documents = new Collection.fromArray(documents).sortBy("name")
         ,(error) ->
-          NotificationFactory.error(
+          NotificationsFactory.error(
             $interpolate(MESSAGES.CRUD.ERROR.RETRIEVE)({name:"Documents"})
           )
         )

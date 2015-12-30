@@ -60,7 +60,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/token', controllers.token);
 app.use('/users', controllers.users);
 app.use('/messages', controllers.messages);
-// app.use('/documents', controllers.documents);
+app.use('/documents', controllers.documents);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
