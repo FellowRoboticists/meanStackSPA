@@ -1,0 +1,21 @@
+<div
+  ng-show="mask.svc.active"
+  class="mask">
+
+  <div
+    class="mask-message-wrapper">
+
+    <span
+      ng-hide="mask.svc.spinner==null"
+      class="mask-spinner">
+        <i icon="refresh" class="spin"></i>
+    </span>
+
+    <span
+      ng-hide="mask.svc.message==null"
+      class="mask-message"
+      ng-bind-html="mask.svc.message"></span>
+
+  </div>
+
+</div>

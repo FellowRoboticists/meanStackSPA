@@ -3,5 +3,6 @@
 angular
 
   .module( "app.document", [
+    "angularFileUpload",
     "validation.match"
   ])

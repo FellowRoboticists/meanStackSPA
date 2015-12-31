@@ -1,0 +1,31 @@
+.mask {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1100;
+  background-color: rgba(15, 9, 9, 0.50);
+  }
+.mask-message-wrapper {
+  position:relative;
+  text-align:center;
+  display:block;
+  margin-top:20%;
+  }
+.mask-spinner {
+  width:100%;
+  color: rgba(15, 9, 9, 0.25);
+  font-size:100px;
+  display:block;
+  }
+.mask-message {
+  color:#EFEFEF;
+  text-shadow: 0px 2px 2px rgba(0, 0, 0, 1);
+  font-size:24px;
+  display:block;
+  margin:10px auto 0 auto;
+  }

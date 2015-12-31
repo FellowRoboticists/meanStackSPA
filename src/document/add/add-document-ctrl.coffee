@@ -4,7 +4,7 @@ angular
 
   .module( "app.document" )
 
-  .controller( "AddDocumentCtrl", ($state, NotificationFactory, FileUploader, maskService, $interpolate, MESSAGES) ->
+  .controller( "AddDocumentCtrl", ($state, NotificationsFactory, FileUploader, maskService, $interpolate, MESSAGES, $cookies) ->
 
     vm = @
 
@@ -20,6 +20,7 @@ angular
       alias: "documentFile"
       formData: [vm.document]
       queueLimit: 1
+      headers: { Authorization: "Bearer " + $cookies.get('JWT-TOKEN') },
       onBeforeUploadItem: (item) ->
         maskService.activate(
           $interpolate(MESSAGES.CRUD.UPLOADING)(item._file)
@@ -36,7 +37,7 @@ angular
         $state.go("app.documents.list")
       onErrorItem: (item, response, status, headers) ->
         console.log("document upload error", response)
-        NotificationFactory.error(
+        NotificationsFactory.error(
           $interpolate(MESSAGES.CRUD.ERROR.UPLOAD)({name:"Document"})
         )
       onCompleteAll: ->

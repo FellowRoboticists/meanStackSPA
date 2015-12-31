@@ -23,15 +23,15 @@
           type="file"
           class=form-control"
           name="documentFile"
-          ng-model="addDocumentCtrl.book.file"
-          uploader="addDocumentCtrl.uploader">
+          ng-model="documentCtrl.document.file"
+          uploader="documentCtrl.uploader">
       </div>
 
       <button
         type="submit"
         class="btn btn-primary"
         ng-disabled="addDocument.$invalid"
-        ng-click="addDocumentCtrl.uploader.uploadAll()">
+        ng-click="documentCtrl.uploader.uploadAll()">
         Save
       </button>
 

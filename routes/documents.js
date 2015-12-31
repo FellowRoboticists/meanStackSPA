@@ -1,9 +1,7 @@
 var express = require('express');
 var router = express.Router();
-
-console.log("Value of authentication: %j", authentication);
-console.log("Value of processJWTToken: " + typeof authentication.processJWTToken);
-console.log("Value of verifyAuthenticated: " + typeof authentication.verifyAuthenticated);
+var multer = require('multer');
+var upload = multer({ dest: '/tmp' });
 
 router.get('/', 
            authentication.processJWTToken,
@@ -16,18 +14,21 @@ router.get('/',
 router.post('/',
            authentication.processJWTToken,
            authentication.verifyAuthenticated,
+           upload.array('documentFile', 1),
            function(req, res, next) {
 
-  if (req.files.documentFile) {
+  if (req.files.length > 0) {
     // There's a file upload here. Let's do this thing.
+    var fileToUpload = req.files[0];
     var document = new Document();
-    document.name = req.files.documentFile.name;
-    user.save().
+    document.name = fileToUpload.originalname;
+    document.save().
       then((u) => {
-        return grid.writeToGridFS(u._id.toString(), req.files.documentFile.path, 'documents').
+        return grid.writeToGridFS(u._id.toString(), fileToUpload.path, 'documents').
           then( () => u );
       }).
-      then( (u) => res.json(u) );
+      then( (u) => res.json(u) ).
+      catch( (err) => console.log(err.stack) );
   } else {
     // No file upload
     res.json({msg: "You didn't put in a file, dipstick"});
