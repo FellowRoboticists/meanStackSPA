@@ -35,7 +35,11 @@
         dir-paginate="document in documentsCtrl.documents
           | itemsPerPage : documentsCtrl.PAGINATION_LIMIT track by document.id">
         <td>
-          {{::document.name}}
+          <a uib-tooltip="View document"
+             tooltip-placement="right"
+             href="/documents/{{::document.id}}">
+            {{::document.name}}
+          </a>
         </td>
         <td class="center">
           <button

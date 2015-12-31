@@ -11,6 +11,25 @@ router.get('/',
     then(function(documents) { res.json(documents); } );
 });
 
+router.param('document', function(req, res, next, id) {
+  Document.findById(id).exec().
+    then(function(document) {
+      if (! document) { return next(new Error("Unable to find document")); }
+      req.document = document
+      next();
+    }).
+    catch(next);
+});
+
+router.get('/:document',
+           authentication.processJWTToken,
+           authentication.verifyAuthenticated,
+           function(req, res, next) {
+  // Use the _id of the document as the name of the file
+  // to retrieve from GridFS
+  next();
+});
+
 router.post('/',
            authentication.processJWTToken,
            authentication.verifyAuthenticated,
@@ -33,6 +52,17 @@ router.post('/',
     // No file upload
     res.json({msg: "You didn't put in a file, dipstick"});
   }
+});
+
+router.delete('/:document'
+           authentication.processJWTToken,
+           authentication.verifyAuthenticated,
+           function(req, res, next) {
+  // First, delete the grid FS file associated with the document
+  // Now, remove the actual document from the database
+  Document.remove({ _id: req.document._id }).
+    then( (document) => res.json(req.user) );
+  next();
 });
 
 module.exports = router;

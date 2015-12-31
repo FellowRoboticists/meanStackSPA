@@ -32,7 +32,7 @@ angular
         })
       onSuccessItem: (item, response, status, headers) ->
         NotificationsFactory.successAfterTransition(
-          $interpolate(MESSAGES.CRUD.SUCCESS.UPLOAD)({name: response.originalFileName})
+          $interpolate(MESSAGES.CRUD.SUCCESS.UPLOAD)({name: response.name})
         )
         $state.go("app.documents.list")
       onErrorItem: (item, response, status, headers) ->
