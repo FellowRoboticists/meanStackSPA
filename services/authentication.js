@@ -1,9 +1,9 @@
-module.exports = (function() {
+module.exports = (() => {
 
   var mongoose = require('mongoose');
   var jwt = require('jsonwebtoken');
 
-  var createJWTToken = function(user, res) {
+  var createJWTToken = (user, res) => {
     var payload = {
       userId: user._id,
       // Seems odd, but ObjectId generates a random number we can use for the csrf Token
@@ -52,7 +52,7 @@ module.exports = (function() {
     }
   };
 
-  var processJWTToken = function(req, res, next) {
+  var processJWTToken = (req, res, next) => {
     var authorizationHeader = req.headers.authorization;
     if (! authorizationHeader) { return next(); }
 
@@ -72,7 +72,7 @@ module.exports = (function() {
     req.__csrfToken = payload.csrfToken;
 
     User.findById(payload.userId).exec().
-      then(function(user) {
+      then( (user) => {
         if (! user) { return res.status(403).send("Unknown user"); }
         req.current_user = user;
         next();
@@ -81,7 +81,7 @@ module.exports = (function() {
 
   };
 
-  var verifyAuthenticated = function(req, res, next) {
+  var verifyAuthenticated = (req, res, next) => {
     if (req.current_user) {
       return next();
     }
@@ -89,7 +89,7 @@ module.exports = (function() {
     res.status(403).send('You are not permitted to perform this action.');
   };
 
-  var verifyRequest = function(req, res, next) {
+  var verifyRequest = (req, res, next) => {
     var csrfToken = req.headers["x-xsrf-token"];
 
     if (! csrfToken || csrfToken !== req.__csrfToken) {

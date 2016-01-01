@@ -1,4 +1,4 @@
-module.exports = (function() {
+module.exports = (() => {
 
   var mongoose = require('mongoose');
   var Grid = require('gridfs-stream');
@@ -19,8 +19,8 @@ module.exports = (function() {
 
       fs.createReadStream(pathToStore).pipe(writeStream);
 
-      writeStream.on('error', function(err) { reject(err); });
-      writeStream.on('finish', function() { resolve(); } );
+      writeStream.on('error', (err) => reject(err) );
+      writeStream.on('finish', () => resolve() );
     });
   };
 
@@ -36,12 +36,8 @@ module.exports = (function() {
 
       readStream.pipe(writeStream);
 
-      writeStream.on('error', function(err) {
-        reject(err);
-      });
-      writeStream.on('finish', function() {
-        resolve();
-      });
+      writeStream.on('error', (err) => reject(err) );
+      writeStream.on('finish', () => resolve() );
     });
   };
 
@@ -53,14 +49,12 @@ module.exports = (function() {
         root: root
       });
 
-      // var writeStream = fs.createWriteStream(destPath);
-
       readStream.pipe(concat( (data) => resolve(data) ));
 
-      readStream.on('error', function(err) {
+      readStream.on('error', (err) => {
         // reject(err);
       });
-      readStream.on('close', function() {
+      readStream.on('close', () => {
         // resolve();
       });
     });
