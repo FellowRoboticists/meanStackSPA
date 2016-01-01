@@ -29,3 +29,28 @@ easy time leveraging them or deleting them (if you don't need them).
 The details will be provided in the Wiki.
 
 Good luck.
+
+Installing and Running
+======================
+
+I'm going to assume you have Node.js, Mongo, etc installed.
+
+Just do the following to get going:
+
+1. Clone this repository
+2. Change your current directory to the root of meanStackSPA
+3. Pull in the required NPM modules (npm install)
+4. Pull in the required bower components (bower install)
+5. Run gulp to prep the front-end code for deliver (gulp or gulp watch)
+6. Seed the database with a user (scripts/addUsers.js)
+6. Start the server (DEBUG=meanStackSPA:* npm start)
+7. Play with the application.
+
+The default user seeded above has the following credentials:
+
+    email: user1@mail.com
+    password: Pass1234
+
+Feel free to play around.
+
+Also, feel free to fork and send pull requests. I can use all the help I can get.
