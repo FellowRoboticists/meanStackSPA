@@ -22,6 +22,36 @@ module.exports = (function() {
     return token;
   };
 
+  var buildDownloadToken = (uri) => {
+    var payload = {
+      url: uri
+    };
+
+    // Expires in 5 minutes
+    return jwt.sign(payload, config.secrets.jwtSecret, { expiresIn: 60 * 5 });
+  };
+
+  var verifyDownloadToken = (req, res, next) => {
+    var thisUrl = req.originalUrl;
+    thisUrl = thisUrl.substring(0, thisUrl.indexOf('?'));
+
+    var jwtToken = req.query.token;
+    if (! jwtToken) { return res.status(403).send("No token provided") }
+    try {
+      payload = jwt.verify(jwtToken, config.secrets.jwtSecret);
+    } catch(ex) {
+      return res.status(403).send(ex.message);
+    }
+
+    console.log(`This URL: ${thisUrl}`);
+    console.log(`Token URL: ${payload.url}`);
+    if (thisUrl === payload.url) {
+      next();
+    } else {
+      res.status(403).send("URL's didn't match...");
+    }
+  };
+
   var processJWTToken = function(req, res, next) {
     var authorizationHeader = req.headers.authorization;
     if (! authorizationHeader) { return next(); }
@@ -72,7 +102,9 @@ module.exports = (function() {
     createJWTToken: createJWTToken,
     processJWTToken: processJWTToken,
     verifyAuthenticated: verifyAuthenticated,
-    verifyRequest: verifyRequest
+    verifyRequest: verifyRequest,
+    buildDownloadToken: buildDownloadToken,
+    verifyDownloadToken: verifyDownloadToken
   };
 
   return mod;

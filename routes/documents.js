@@ -21,12 +21,17 @@ router.param('document', function(req, res, next, id) {
     catch(next);
 });
 
-router.get('/:document',
+router.post('/:document',
            //authentication.processJWTToken,
            //authentication.verifyAuthenticated,
            function(req, res, next) {
-  // Use the _id of the document as the name of the file
+  res.json({ token: authentication.buildDownloadToken(req.originalUrl) });
+});
 
+router.get('/:document',
+           authentication.verifyDownloadToken,
+           function(req, res, next) {
+  // Use the _id of the document as the name of the file
   // to retrieve from GridFS
   console.log(`Fixing to download the document: ${req.document.name}`);
   grid.downloadFromGridFS(req.document._id.toString(), 'documents').
