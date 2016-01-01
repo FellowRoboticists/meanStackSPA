@@ -4,7 +4,7 @@ angular
 
   .module( "app.document" )
 
-  .controller( "DeleteDocumentCtrl", ($uibModalInstance, NotificationFactory, Document, selectedDocument, $interpolate, MESSAGES) ->
+  .controller( "DeleteDocumentCtrl", ($uibModalInstance, NotificationsFactory, Document, selectedDocument, $interpolate, MESSAGES) ->
 
     vm = @
 
@@ -18,16 +18,22 @@ angular
       vm.document
         .delete()
         .then( (document) ->
-          NotificationFactory.success(
-            $interpolate(MESSAGES.CRUD.DELETE)(document)
+          NotificationsFactory.success(
+            $interpolate(MESSAGES.CRUD.SUCCESS.DELETE)({ name: document.name })
           )
           $uibModalInstance.close(document)
         ,(error) ->
-          NotificationFactory.error(
+          NotificationsFactory.error(
             $interpolate(MESSAGES.CRUD.ERROR.DELETE)({name:"Document"})
           )
           $uibModalInstance.close(error)
         )
+
+    Object.defineProperties(@,
+      'validDocumentNameMatch':
+        get: ->
+          @matchDocumentName is @document.name
+    )
 
     #
     # Cancel delete

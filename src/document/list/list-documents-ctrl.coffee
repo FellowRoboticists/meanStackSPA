@@ -42,7 +42,7 @@ angular
         resolve:
           selectedDocument: -> document
       )
-      modal.result.then( __loadUsers )
+      modal.result.then( __loadDocuments )
 
     return
   )

@@ -22,12 +22,21 @@ router.param('document', function(req, res, next, id) {
 });
 
 router.get('/:document',
-           authentication.processJWTToken,
-           authentication.verifyAuthenticated,
+           //authentication.processJWTToken,
+           //authentication.verifyAuthenticated,
            function(req, res, next) {
   // Use the _id of the document as the name of the file
+
   // to retrieve from GridFS
-  next();
+  console.log(`Fixing to download the document: ${req.document.name}`);
+  grid.downloadFromGridFS(req.document._id.toString(), 'documents').
+    then( (data) => {
+      console.log("Got the data, downloading it as an attachment");
+      res.contentType('application/pdf; name="' + req.document.name + '"');
+      res.attachment(req.document.name);
+      res.send(new Buffer(data));
+    }).
+    catch( next );
 });
 
 router.post('/',
@@ -54,15 +63,15 @@ router.post('/',
   }
 });
 
-router.delete('/:document'
+router.delete('/:document',
            authentication.processJWTToken,
            authentication.verifyAuthenticated,
            function(req, res, next) {
   // First, delete the grid FS file associated with the document
-  // Now, remove the actual document from the database
-  Document.remove({ _id: req.document._id }).
-    then( (document) => res.json(req.user) );
-  next();
+  grid.removeGridFSFile(req.document._id.toString(), 'documents').
+    then( () => Document.remove({ _id: req.document._id }).
+         then( (document) => res.json(req.user) ) ).
+    catch( next );
 });
 
 module.exports = router;

@@ -3,7 +3,7 @@
   <div class="modal-header">
     <h3 class="modal-title">
       <i icon="warning-sign"></i>
-      Delete User
+      Delete Document
     </h3>
   </div>
 
@@ -13,7 +13,7 @@
     <input autofocus
       type="text"
       autocomplete="off"
-      ng-modal="documentCtrl.name"
+      ng-model="documentCtrl.matchDocumentName"
       placeholder="confirm document name..."
       class="form-control">
   </div>
@@ -22,7 +22,7 @@
     <button
        type="submit"
        class="btn btn-danger"
-       ng-disabled="documentCtrl.name!==documentCtrl.document.name"
+       ng-disabled="!documentCtrl.validDocumentNameMatch"
        ng-click="documentCtrl.delete()">
       Delete
     </button>

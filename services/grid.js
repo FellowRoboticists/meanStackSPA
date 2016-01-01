@@ -3,12 +3,13 @@ module.exports = (function() {
   var mongoose = require('mongoose');
   var Grid = require('gridfs-stream');
   var fs = require('fs');
+  var concat = require('concat-stream');
 
-  // var Grid.mongo = mongoose.mongo;
+  Grid.mongo = mongoose.mongo;
 
   var writeToGridFS = (filename, pathToStore, root) => {
-    var gfs = Grid(mongoose.connection.db, mongoose.mongo);
-    return new Promise(function(resolve, reject) {
+    var gfs = Grid(mongoose.connection.db);
+    return new Promise( (resolve, reject) => {
       var writeStream = gfs.createWriteStream({
         filename: filename,
         content_type: 'application/pdf',
@@ -23,8 +24,65 @@ module.exports = (function() {
     });
   };
 
+  var readFromGridFS = (gridFSFilename, destPath, root) => {
+    var gfs = Grid(mongoose.connection.db);
+    return new Promise( (resolve, reject) => {
+      var readStream = gfs.createReadStream({
+        filename: gridFSFilename,
+        root: root
+      });
+
+      var writeStream = fs.createWriteStream(destPath);
+
+      readStream.pipe(writeStream);
+
+      writeStream.on('error', function(err) {
+        reject(err);
+      });
+      writeStream.on('finish', function() {
+        resolve();
+      });
+    });
+  };
+
+  var downloadFromGridFS = (gridFSFilename, root) => {
+    var gfs = Grid(mongoose.connection.db);
+    return new Promise( (resolve, reject) => {
+      var readStream = gfs.createReadStream({
+        filename: gridFSFilename,
+        root: root
+      });
+
+      // var writeStream = fs.createWriteStream(destPath);
+
+      readStream.pipe(concat( (data) => resolve(data) ));
+
+      readStream.on('error', function(err) {
+        // reject(err);
+      });
+      readStream.on('close', function() {
+        // resolve();
+      });
+    });
+  };
+
+  var removeGridFSFile = (gridFSFilename, root) => {
+    var gfs = Grid(mongoose.connection.db);
+    return new Promise( (resolve, reject) => {
+      gfs.remove({
+        filename: gridFSFilename,
+        root: root
+      }, (err) => {
+        if (err) { return reject(err); }
+        resolve();
+      });
+    });
+  };
+
   var mod = {
-    writeToGridFS: writeToGridFS
+    writeToGridFS: writeToGridFS,
+    downloadFromGridFS: downloadFromGridFS,
+    removeGridFSFile: removeGridFSFile
   };
 
   return mod;
