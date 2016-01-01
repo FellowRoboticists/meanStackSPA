@@ -38,7 +38,7 @@ var UserSchema = new Schema({
 // Deal with the toJSON transformation
 UserSchema.options.toJSON = {
 
-  transform: function(doc, ret, options) {
+  transform: (doc, ret, options) => {
     ret.id = ret._id;
     delete ret.__v;
     delete ret.password;
@@ -67,11 +67,9 @@ UserSchema.pre('save', function(next) {
   var user = this;
 
   // only hash the password if it has been modified (or is new)
-  if (! user.isModified('password')) {
-    return next();
-  }
+  if (! user.isModified('password')) { return next(); }
 
-  bcrypt.hash(user.password, 10, function(err, encryptedPassword) {
+  bcrypt.hash(user.password, 10, (err, encryptedPassword) => {
     if (err) { return next(err); }
     user.password = encryptedPassword;
     next();
@@ -81,7 +79,7 @@ UserSchema.pre('save', function(next) {
 
 // Now add some methods
 UserSchema.methods.comparePassword = function(password, cb) {
-  bcrypt.compare(password, this.password, function(err, valid) {
+  bcrypt.compare(password, this.password, (err, valid) => {
     if (err) { return cb(err); }
     cb(null, valid);
   });

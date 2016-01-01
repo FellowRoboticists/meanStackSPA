@@ -19,7 +19,7 @@ var DocumentSchema = new Schema({
 
 DocumentSchema.options.toJSON = {
 
-  transform: function(doc, ret, options) {
+  transform: (doc, ret, options) => {
     ret.id = ret._id;
     delete ret.__v;
     delete ret.createdAt;
