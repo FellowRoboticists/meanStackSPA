@@ -1,20 +1,31 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
+/**
+ * GET /users
+ *
+ * Returns the list of users in the system.
+ *
+ * Caller must be authenticated.
+ */
 router.get('/', 
            authentication.processJWTToken,
            authentication.verifyAuthenticated,
-           function(req, res, next) {
+           (req, res, next) => {
+
   User.find({}).exec().
-    then(function(users) {
-      res.json(users);
-    });
+    then( (users) => res.json(users) );
 });
 
-router.param('user', function(req, res, next, id) {
+/**
+ * Handles the user id param passed in some URI's.
+ *
+ * Sets the 'user' variable on the req object.
+ */
+router.param('user', (req, res, next, id) => {
+
   User.findById(id).exec().
-    then(function(user) {
+    then( (user) => {
       if (! user) { return next(new Error("Unable to find user")); }
       req.user = user;
       next();
@@ -22,35 +33,61 @@ router.param('user', function(req, res, next, id) {
     catch(next);
 });
 
+/**
+ * GET /users/:user
+ *
+ * Returns the data for the specified user.
+ *
+ * Caller must be authenticated.
+ */
 router.get('/:user', 
            authentication.processJWTToken,
            authentication.verifyAuthenticated,
-           function(req, res, next) {
+           (req, res, next) => {
+
   res.json(req.user);
 });
 
-/* Create user */
+/**
+ * POST /users
+ *
+ * Creates a new user in the system.
+ *
+ * Returns the list of users after the new user was added.
+ *
+ * Caller must be authenticated.
+ */
 router.post('/', 
-           authentication.processJWTToken,
-           authentication.verifyAuthenticated,
-           authentication.verifyRequest,
-            function(req, res, next) {
+            authentication.processJWTToken,
+            authentication.verifyAuthenticated,
+            authentication.verifyRequest,
+            (req, res, next) => {
 
   var user = new User(req.body);
-  user.save().
-    then(function(u) {
-      User.find().exec().
-        then(function(users) {
-          res.json(users);
-        });
-    });
+  user.
+    save().
+    then( (u) => User.
+         find().
+         exec().
+         then( (users) => res.json(users) ) 
+    );
 });
 
+/**
+ * PUT /users/:user
+ *
+ * Update the specified user.
+ *
+ * Returns the updated user.
+ *
+ * Caller must be authenticated.
+ */
 router.put('/:user', 
            authentication.processJWTToken,
            authentication.verifyAuthenticated,
            authentication.verifyRequest,
-           function(req, res, next) {
+           (req, res, next) => {
+
   var user = req.user;
 
   user.name = req.body.name;
@@ -63,24 +100,30 @@ router.put('/:user',
   user.markModified('permissions');
 
   user.save().
-    then(function(user) {
-      res.json(user);
-    }).
-    catch(function(err) {
+    then( (user) => res.json(user) ).
+    catch( (err) => {
       console.log(err.stack);
       res.status(500).send(err.message);
     });
 });
 
+/**
+ * DELETE /users/:user
+ *
+ * Deletes the specified user.
+ *
+ * Returns the deleted user.
+ *
+ * Caller must be authenticated.
+ */
 router.delete('/:user', 
-           authentication.processJWTToken,
-           authentication.verifyAuthenticated,
-           authentication.verifyRequest,
-              function(req, res, next) {
+              authentication.processJWTToken,
+              authentication.verifyAuthenticated,
+              authentication.verifyRequest,
+              (req, res, next) => {
+
   User.remove({ _id: req.user._id }).
-    then(function(u) {
-      res.json(req.user);
-    });
+    then( (u) => res.json(req.user) );
 });
 
 module.exports = router;
