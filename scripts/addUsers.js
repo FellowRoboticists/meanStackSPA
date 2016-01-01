@@ -1,15 +1,14 @@
 #!/usr/bin/env node
 
+require('../bootstrap');
+
 var mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
 
-var User = require('../models/User');
-
-mongoose.connect("mongodb://localhost/meanStackSPA");
+mongoose.connect(config.database.url);
 
 var conn = mongoose.connection;
 conn.on('error', console.error.bind(console, 'connection error: '));
-conn.once('open', function() {
+conn.once('open', () => {
 
   var user = new User({
     name: "user1",
@@ -22,11 +21,12 @@ conn.once('open', function() {
   });
 
   user.save().
-    then(function(u) {
+    then( (u) => {
       console.log(`Saved new user: ${u}`);
       process.exit();
     }).
-    catch(function(err) {
+    catch( (err) => {
       console.log(err.stack);
+      process.exit();
     });
 });

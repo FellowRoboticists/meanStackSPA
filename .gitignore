@@ -42,3 +42,6 @@ public/css
 public/fonts
 public/index.html
 public/js
+
+# Ignore general PDF files on principle
+*.pdf

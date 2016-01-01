@@ -7,27 +7,10 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var requireDir = require('require-dir');
 
-// ##############################################################
-// Pull in all the models
-var models = requireDir('./models');
-// Put all the models into the global namespace
-for (var model in models) {
-  global[model] = models[model];
-}
-
-// ##############################################################
-// Pull in all the services...
-var services = requireDir('./services');
-// Put all the services into the global namespace
-for (var service in services) {
-  global[service] = services[service];
-}
-
-// ##############################################################
-// Pull in all the configurations
-var configurations = requireDir('./config');
-// Register all the configurations with the globl namespace under config
-global.config = configurations;
+/**
+ * Bring in the models, services and configurations
+ */
+require('./bootstrap');
 
 // ##############################################################
 // Pull in all the controllers
@@ -40,7 +23,7 @@ var controllers = requireDir('./routes');
 mongoose.Promise = global.Promise;
 
 // Connect. The URL should be externalized to a configuration file
-mongoose.connect("mongodb://localhost/meanStackSPA");
+mongoose.connect(config.database.url);
 
 var app = express();
 
@@ -49,7 +32,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
