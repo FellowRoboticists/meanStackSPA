@@ -43,8 +43,6 @@ module.exports = (() => {
       return res.status(403).send(ex.message);
     }
 
-    console.log(`This URL: ${thisUrl}`);
-    console.log(`Token URL: ${payload.url}`);
     if (thisUrl === payload.url) {
       next();
     } else {

@@ -48,8 +48,8 @@ router.param('document', (req, res, next, id) => {
  * will be uncommented.
  */
 router.post('/:document',
-           //authentication.processJWTToken,
-           //authentication.verifyAuthenticated,
+           authentication.processJWTToken,
+           authentication.verifyAuthenticated,
            (req, res, next) => {
 
   res.json({ 
