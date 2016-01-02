@@ -9,10 +9,10 @@ var router = express.Router();
  * Just a test action
  */
 router.post('/', (req, res, next) => {
-  console.log("Received the message from the FE");
-  socketIO.sockets.emit('user:logged_out', { msg: 'joyful dog' });
-  console.log("Broadcast the message");
-  res.json({ status: 'sent' });
+  // socketIO.sockets.emit('user:logged_out', { msg: 'joyful dog' });
+  queue.queueJob('talker', 'messageQueue', 100, 0, 300, 'joyful dog').
+    then( () => res.json({ status: 'sent' }) ).
+    catch(next);
 });
 
 module.exports = router;

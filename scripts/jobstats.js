@@ -32,7 +32,7 @@ if (program.verbose) {
 }
 
 var tubes = () => {
-  return queue.listTubes().
+  return queue.listTubes(null).
     then( (tubeNames) => {
       console.log("Available Tubes");
       console.log("---------------");
@@ -41,12 +41,12 @@ var tubes = () => {
 };
 
 var stats = () => {
-  return queue.listTubes().
+  return queue.listTubes(null).
     then( (tubeNames) => {
       return new Promise( (resolve, reject) => {
         async.eachSeries(tubeNames, (tubeName, cb) => {
           console.log(`Statistics for tube: ${tubeName}`);
-          queue.getTubeStatistics(tubeName).
+          queue.getTubeStatistics(null, tubeName).
             then( (tubeStats) => {
               console.log(`   - ready       ${tubeStats['current-jobs-ready']}`);
               console.log(`   - reserved    ${tubeStats['current-jobs-reserved']}`);
@@ -82,11 +82,12 @@ var enqueue = (options) => {
     throw new Error('Must specify argument containing the job to queue');
   }
 
-  return queue.queueJob(options.tube, 
-                            options.priority, 
-                            options.delay,
-                            options.ttr,
-                            options.args[0]).
+  return queue.queueJob(null, 
+                        options.tube, 
+                        options.priority, 
+                        options.delay,
+                        options.ttr,
+                        options.args[0]).
     then( (jobId) => console.log(`Queued '${options.args[0]}' in job ${jobId}`) );
 };
 
@@ -100,7 +101,7 @@ var __workJob = (job) => {
   });
 };
 
-var listen = (options) => queue.processJobsInTube(options.tube, __workJob);
+var listen = (options) => queue.processJobsInTube(null, options.tube, __workJob);
 
 var commands = {
   tubes: tubes,
@@ -110,7 +111,7 @@ var commands = {
   wargs: wargs
 };
 
-queue.connect(program.host, program.port).
+queue.connect(null, program.host, program.port).
   then( () => {
     if (commands[program.command]) {
       return commands[program.command](program);
@@ -124,6 +125,6 @@ queue.connect(program.host, program.port).
     }
   }).
   catch( (err) => {
-    console.log(err);
+    console.log(err.stack);
     process.exit();
   });

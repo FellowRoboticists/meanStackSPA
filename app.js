@@ -76,4 +76,17 @@ app.use(function(err, req, res, next) {
   });
 });
 
+// Start up the beanstalk queuing
+queue.connect('listener', config.beanstalk.host, config.beanstalk.port).
+  then( () => {
+    console.log("Starting to listen on messageQueue");
+    queue.processJobsInTube('listener', 'messageQueue', messaging.messageQueueWorker).
+      then( () => console.log("--") );
+  });
+
+queue.connect('talker', config.beanstalk.host, config.beanstalk.port).
+  then( () => {
+    console.log("Talker ready for speaking");
+  });
+
 module.exports = app;

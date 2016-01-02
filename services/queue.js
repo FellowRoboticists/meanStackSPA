@@ -5,23 +5,29 @@ module.exports = (() => {
   // This is the global connected client variable. This will be
   // set to the five-beans client when connected. If not connected,
   // it will be set to null.
-  var connectedClient = null;
+  // var connectedClient = null;
+  var connectedClients = {
+  };
 
-  var connect = (host, port) => {
+  var connectionName = (cName) => cName || 'default';
+
+  var connect = (whichConnection, host, port) => {
     var client = new fiveBeans.client(host, port);
+
+    var connection = connectionName(whichConnection);
 
     return new Promise( (resolve, reject) => {
 
       client.
         on('connect', () => { 
-          connectedClient = client;
+          connectedClients[connection] = client;
           resolve(client); 
         }).
 
         on('error', (err) => reject(err) ).
 
         on('close', () => {        
-          connectedClient = null;
+          connectedClients[connection] = null;
           resolve(null);
         }).
 
@@ -30,83 +36,101 @@ module.exports = (() => {
     });
   };
 
-  var useTube = (tubeName) => {
+  var useTube = (whichConnection, tubeName) => {
+    var connection = connectionName(whichConnection);
+
     return new Promise( (resolve, reject) => {
-      connectedClient.use(tubeName, (err) => {
+      connectedClients[connection].use(tubeName, (err) => {
         if (err) { return reject(err); }
         resolve(tubeName);
       });
     });
   };
 
-  var putJob = (priority, delay, ttr, payload) => {
+  var putJob = (whichConnection, priority, delay, ttr, payload) => {
+    var connection = connectionName(whichConnection);
+
     console.log(`Priority: ${priority}`);
     console.log(`Delay: ${delay}`);
     console.log(`Ttr: ${ttr}`);
     console.log(`Payload: '${payload}'`);
     return new Promise( (resolve, reject) => {
-      connectedClient.put(priority, delay, ttr, payload, (err, jobid) => {
+      connectedClients[connection].put(priority, delay, ttr, payload, (err, jobid) => {
         if (err) { return reject(err); }
         resolve(jobid);
       });
     });
   };
 
-  var queueJob = (tubeName, priority, delay, ttr, data) => {
-    return useTube(tubeName).
-      then( (tn) => putJob(priority, delay, ttr, data) );
+  var queueJob = (whichConnection, tubeName, priority, delay, ttr, data) => {
+    var connection = connectionName(whichConnection);
+
+    return useTube(connection, tubeName).
+      then( (tn) => putJob(connection, priority, delay, ttr, data) );
   };
 
-  var listTubes = () => {
+  var listTubes = (whichConnection) => {
+    var connection = connectionName(whichConnection);
+
     return new Promise( (resolve, reject) => {
-      connectedClient.list_tubes( (err, tubeNames) => {
+      connectedClients[connection].list_tubes( (err, tubeNames) => {
         if (err) { return reject(err); }
         resolve(tubeNames);
       });
     });
   };
 
-  var getTubeStatistics = (tubeName) => {
+  var getTubeStatistics = (whichConnection, tubeName) => {
+    var connection = connectionName(whichConnection);
+
     return new Promise( (resolve, reject) => {
-      connectedClient.stats_tube(tubeName, (err, tubeStats) => {
+      connectedClients[connection].stats_tube(tubeName, (err, tubeStats) => {
         if (err) { return reject(err); }
           resolve(tubeStats);
         });
       });
   };
 
-  var watchTube = (tubeName) => {
+  var watchTube = (whichConnection, tubeName) => {
+    var connection = connectionName(whichConnection);
+
     return new Promise( (resolve, reject) => {
-      connectedClient.watch(tubeName, (err, numWatched) => {
+      connectedClients[connection].watch(tubeName, (err, numWatched) => {
         if (err) { return reject(err); }
         resolve(numWatched);
       });
     });
   };
 
-  var reserveJob = () => {
+  var reserveJob = (whichConnection) => {
+    var connection = connectionName(whichConnection);
+
     return new Promise( (resolve, reject) => {
-      connectedClient.reserve( (err, jobid, payload) => {
+      connectedClients[connection].reserve( (err, jobid, payload) => {
         if (err) { return reject(err); }
         resolve({ id: jobid, payload: payload.toString() });
       });
     });
   };
 
-  var deleteJob = (jobid) => {
+  var deleteJob = (whichConnection, jobid) => {
+    var connection = connectionName(whichConnection);
+
     return new Promise( (resolve, reject) => {
-      connectedClient.destroy(jobid, (err) => {
+      connectedClients[connection].destroy(jobid, (err) => {
         if (err) { return reject(err); }
         resolve();
       });
     });
   };
                                                 
-  var processJobsInTube = (tubeName, workJob) => {
-    return watchTube(tubeName).
-      then( (numWatched) => reserveJob() ).
+  var processJobsInTube = (whichConnection, tubeName, workJob) => {
+    var connection = connectionName(whichConnection);
+
+    return watchTube(connection, tubeName).
+      then( (numWatched) => reserveJob(connection) ).
       then( (job) => workJob(job).  
-           then( () => deleteJob(job.id) ).
+           then( () => deleteJob(connection, job.id) ).
            catch( (err) => {
             deleteJob(job.id).
               then( () => console.log(err.stack) );
@@ -114,11 +138,11 @@ module.exports = (() => {
       ).
       then( () => {
         // Do it again...
-        process.nextTick( () => processJobsInTube(tubeName, workJob) );
+        process.nextTick( () => processJobsInTube(connection, tubeName, workJob) );
       }).
       catch( (err) => {
         console.log(err.stack);
-        process.nextTick( () => processJobsInTube(tubeName, workJob) );
+        process.nextTick( () => processJobsInTube(connection, tubeName, workJob) );
       });
   };
 
