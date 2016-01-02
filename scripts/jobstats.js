@@ -31,25 +31,23 @@ if (program.verbose) {
   console.log();
 }
 
-var tubes = function() {
+var tubes = () => {
   return queue.listTubes().
-    then(function(tubeNames) {
+    then( (tubeNames) => {
       console.log("Available Tubes");
       console.log("---------------");
-      tubeNames.forEach(function(tubeName) {
-        console.log(`* ${tubeName}`);
-      });
+      tubeNames.forEach( (tubeName) => console.log(`* ${tubeName}`) );
     });
 };
 
-var stats = function() {
+var stats = () => {
   return queue.listTubes().
-    then(function(tubeNames) {
-      return new Promise(function(resolve, reject) {
-        async.eachSeries(tubeNames, function(tubeName, cb) {
+    then( (tubeNames) => {
+      return new Promise( (resolve, reject) => {
+        async.eachSeries(tubeNames, (tubeName, cb) => {
           console.log(`Statistics for tube: ${tubeName}`);
           queue.getTubeStatistics(tubeName).
-            then(function(tubeStats) {
+            then( (tubeStats) => {
               console.log(`   - ready       ${tubeStats['current-jobs-ready']}`);
               console.log(`   - reserved    ${tubeStats['current-jobs-reserved']}`);
               console.log(`   - delayed     ${tubeStats['current-jobs-delayed']}`);
@@ -60,7 +58,7 @@ var stats = function() {
               cb();
             }).
             catch(cb);
-        }, function(err) {
+        }, (err) => {
           if (err) { reject(err); }
           resolve();
         });
@@ -68,8 +66,8 @@ var stats = function() {
     });
 };
 
-var wargs = function(options) {
-  return new Promise(function(resolve, reject) {
+var wargs = (options) => {
+  return new Promise( (resolve, reject) => {
     if (options.args.length > 0) {
       console.log(`Do something with the args: ${options.args}`);
       resolve();
@@ -79,7 +77,7 @@ var wargs = function(options) {
   });
 };
 
-var enqueue = function(options) {
+var enqueue = (options) => {
   if (options.args.length < 1) {
     throw new Error('Must specify argument containing the job to queue');
   }
@@ -89,13 +87,11 @@ var enqueue = function(options) {
                             options.delay,
                             options.ttr,
                             options.args[0]).
-    then(function(jobId) {
-      console.log(`Queued '${options.args[0]}' in job ${jobId}`);
-    });
+    then( (jobId) => console.log(`Queued '${options.args[0]}' in job ${jobId}`) );
 };
 
-var __workJob = function(job) {
-  return new Promise(function(resolve, reject) {
+var __workJob = (job) => {
+  return new Promise( (resolve, reject) => {
     // reject(new Error("Just faking an error"));
     console.log("Processing job: ");
     console.log(`  Job id: ${job.id}`);
@@ -104,9 +100,7 @@ var __workJob = function(job) {
   });
 };
 
-var listen = function(options) {
-  return queue.processJobsInTube(options.tube, __workJob);
-};
+var listen = (options) => queue.processJobsInTube(options.tube, __workJob);
 
 var commands = {
   tubes: tubes,
@@ -117,19 +111,19 @@ var commands = {
 };
 
 queue.connect(program.host, program.port).
-  then(function() {
+  then( () => {
     if (commands[program.command]) {
       return commands[program.command](program);
     } else {
       throw new Error(`Invalid command: ${program.command}`);
     }
   }).
-  then(function() {
+  then( () => {
     if (program.command !== 'listen') {
       process.exit();
     }
   }).
-  catch(function(err) {
+  catch( (err) => {
     console.log(err);
     process.exit();
   });
