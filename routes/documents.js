@@ -38,26 +38,6 @@ router.param('document', (req, res, next, id) => {
 });
 
 /**
- * POST /documents/:document
- *
- * Retrieves a token that can be used to perform the actual download of the 
- * document.
- *
- * Caller must be authenticated. Pay no attention to the commented out
- * middle-ware; when we have this worked out in the front-end, these
- * will be uncommented.
- */
-router.post('/:document',
-           authentication.processJWTToken,
-           authentication.verifyAuthenticated,
-           (req, res, next) => {
-
-  res.json({ 
-    token: authentication.buildDownloadToken(req.originalUrl) 
-  });
-});
-
-/**
  * GET /documents/:document
  *
  * Downloads the requested document.
@@ -67,6 +47,8 @@ router.post('/:document',
  * takes care of authentication.
  */
 router.get('/:document',
+           authentication.processJWTToken,
+           authentication.handleResourceAccess,
            authentication.verifyDownloadToken,
            (req, res, next) => {
 

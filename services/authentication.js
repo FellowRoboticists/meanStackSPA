@@ -79,6 +79,22 @@ module.exports = (() => {
 
   };
 
+  var handleResourceAccess = (req, res, next) => {
+    if (req.current_user) {
+      // This means that someone has made a resource acess call.
+      // This 'async' request has been authorized, so we need to
+      // return a resource token so that a sync request can be made to
+      // to actually download the resource...
+      res.json({ 
+        token: buildDownloadToken(req.originalUrl) 
+      });
+    } else {
+      var jwtToken = req.query.token;
+      if (! jwtToken) { return res.status(403).send("No resource token"); }
+      next();
+    }
+  };
+
   var verifyAuthenticated = (req, res, next) => {
     if (req.current_user) {
       return next();
@@ -102,7 +118,8 @@ module.exports = (() => {
     verifyAuthenticated: verifyAuthenticated,
     verifyRequest: verifyRequest,
     buildDownloadToken: buildDownloadToken,
-    verifyDownloadToken: verifyDownloadToken
+    verifyDownloadToken: verifyDownloadToken,
+    handleResourceAccess: handleResourceAccess
   };
 
   return mod;

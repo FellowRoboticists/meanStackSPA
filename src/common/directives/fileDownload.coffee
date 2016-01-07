@@ -11,7 +11,7 @@ angular
         event.preventDefault()
         href = attrs.href
         $http
-          .post(href)
+          .get(href)
           .then( (response) ->
             document.location.href = "#{href}?token=#{response.data.token}"
           ,(error) ->
