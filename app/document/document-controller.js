@@ -1,7 +1,11 @@
-var express = require('express');
-var router = express.Router();
-var multer = require('multer');
-var upload = multer({ dest: '/tmp' });
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
+const upload = multer({ dest: '/tmp' });
+
+const Document = require('./document-model');
+const tokenMW = require('../token/token-middleware');
+const gridSVC = require('../utility/grid-service');
 
 /**
  * GET /documents -
@@ -11,12 +15,11 @@ var upload = multer({ dest: '/tmp' });
  * Caller must be authenticated.
  */
 router.get('/', 
-           authentication.processJWTToken,
-           authentication.verifyAuthenticated,
+           tokenMW.processJWTToken,
+           tokenMW.verifyAuthenticated,
            (req, res, next) => {
 
   Document.find({}).
-    exec().
     then( (documents) => res.json(documents) );
 });
 
@@ -28,7 +31,6 @@ router.get('/',
  */
 router.param('document', (req, res, next, id) => {
   Document.findById(id).
-    exec().
     then((document) => {
       if (! document) { return next(new Error("Unable to find document")); }
       req.document = document
@@ -44,15 +46,15 @@ router.param('document', (req, res, next, id) => {
  *
  * Caller must provide a query parameter of 'token' with a value that
  * is the token provided by the POST /documents/:document request. This
- * takes care of authentication.
+ * takes care of tokenMW.
  */
 router.get('/:document',
-           authentication.processJWTToken,
-           authentication.handleResourceAccess,
-           authentication.verifyDownloadToken,
+           tokenMW.processJWTToken,
+           tokenMW.handleResourceAccess,
+           tokenMW.verifyDownloadToken,
            (req, res, next) => {
 
-  grid.downloadFromGridFS(req.document._id.toString(), 'documents').
+  gridSVC.downloadFromGridFS(req.document._id.toString(), 'documents').
     then( (data) => {
       res.contentType('application/pdf; name="' + req.document.name + '"');
       res.attachment(req.document.name);
@@ -69,8 +71,8 @@ router.get('/:document',
  * Caller must be authenticated.
  */
 router.post('/',
-           authentication.processJWTToken,
-           authentication.verifyAuthenticated,
+           tokenMW.processJWTToken,
+           tokenMW.verifyAuthenticated,
            upload.array('documentFile', 1),
            (req, res, next) => {
 
@@ -82,7 +84,7 @@ router.post('/',
     });
     // document.name = fileToUpload.originalname;
     document.save().
-      then( (document) => grid.writeToGridFS(document._id.toString(), fileToUpload.path, 'documents').
+      then( (document) => gridSVC.writeToGridFS(document._id.toString(), fileToUpload.path, 'documents').
             then( () => document ) ).
       then( (u) => res.json(u) ).
       catch( (err) => console.log(err.stack) );
@@ -100,11 +102,11 @@ router.post('/',
  * The user must be authenticated.
  */
 router.delete('/:document',
-           authentication.processJWTToken,
-           authentication.verifyAuthenticated,
+           tokenMW.processJWTToken,
+           tokenMW.verifyAuthenticated,
            (req, res, next) => {
              
-  grid.removeGridFSFile(req.document._id.toString(), 'documents').
+  gridSVC.removeGridFSFile(req.document._id.toString(), 'documents').
     then( () => Document.remove({ _id: req.document._id }).
          then( (document) => res.json(req.user) ) ).
     catch( next );

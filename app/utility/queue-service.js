@@ -1,6 +1,6 @@
 module.exports = (() => {
 
-  var fiveBeans = require('fivebeans');
+  const fiveBeans = require('fivebeans');
 
   // This is the global connected client variable. This will be
   // set to the five-beans client when connected. If not connected,
@@ -11,7 +11,7 @@ module.exports = (() => {
 
   var connectionName = (cName) => cName || 'default';
 
-  var connect = (whichConnection, host, port) => {
+  const connect = (whichConnection, host, port) => {
     var client = new fiveBeans.client(host, port);
 
     var connection = connectionName(whichConnection);
@@ -36,7 +36,7 @@ module.exports = (() => {
     });
   };
 
-  var useTube = (whichConnection, tubeName) => {
+  const useTube = (whichConnection, tubeName) => {
     var connection = connectionName(whichConnection);
 
     return new Promise( (resolve, reject) => {
@@ -47,7 +47,7 @@ module.exports = (() => {
     });
   };
 
-  var putJob = (whichConnection, priority, delay, ttr, payload) => {
+  const putJob = (whichConnection, priority, delay, ttr, payload) => {
     var connection = connectionName(whichConnection);
 
     console.log(`Priority: ${priority}`);
@@ -62,14 +62,14 @@ module.exports = (() => {
     });
   };
 
-  var queueJob = (whichConnection, tubeName, priority, delay, ttr, data) => {
+  const queueJob = (whichConnection, tubeName, priority, delay, ttr, data) => {
     var connection = connectionName(whichConnection);
 
     return useTube(connection, tubeName).
       then( (tn) => putJob(connection, priority, delay, ttr, data) );
   };
 
-  var listTubes = (whichConnection) => {
+  const listTubes = (whichConnection) => {
     var connection = connectionName(whichConnection);
 
     return new Promise( (resolve, reject) => {
@@ -80,7 +80,7 @@ module.exports = (() => {
     });
   };
 
-  var getTubeStatistics = (whichConnection, tubeName) => {
+  const getTubeStatistics = (whichConnection, tubeName) => {
     var connection = connectionName(whichConnection);
 
     return new Promise( (resolve, reject) => {
@@ -91,7 +91,7 @@ module.exports = (() => {
       });
   };
 
-  var watchTube = (whichConnection, tubeName) => {
+  const watchTube = (whichConnection, tubeName) => {
     var connection = connectionName(whichConnection);
 
     return new Promise( (resolve, reject) => {
@@ -102,7 +102,7 @@ module.exports = (() => {
     });
   };
 
-  var reserveJob = (whichConnection) => {
+  const reserveJob = (whichConnection) => {
     var connection = connectionName(whichConnection);
 
     return new Promise( (resolve, reject) => {
@@ -113,7 +113,7 @@ module.exports = (() => {
     });
   };
 
-  var deleteJob = (whichConnection, jobid) => {
+  const deleteJob = (whichConnection, jobid) => {
     var connection = connectionName(whichConnection);
 
     return new Promise( (resolve, reject) => {
@@ -124,7 +124,7 @@ module.exports = (() => {
     });
   };
                                                 
-  var processJobsInTube = (whichConnection, tubeName, workJob) => {
+  const processJobsInTube = (whichConnection, tubeName, workJob) => {
     var connection = connectionName(whichConnection);
 
     return watchTube(connection, tubeName).
@@ -146,7 +146,7 @@ module.exports = (() => {
       });
   };
 
-  var mod = {
+  const mod = {
     connect: connect,
     listTubes: listTubes,
     getTubeStatistics: getTubeStatistics,

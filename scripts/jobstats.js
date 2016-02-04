@@ -3,7 +3,7 @@
 var program = require('commander');
 var async = require('async');
 
-require('../bootstrap');
+var queue = require('../app/utility/queue-service');
 
 program.
   version('0.0.1').

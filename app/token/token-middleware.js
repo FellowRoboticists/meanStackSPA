@@ -1,9 +1,11 @@
 module.exports = (() => {
 
-  var mongoose = require('mongoose');
-  var jwt = require('jsonwebtoken');
+  const mongoose = require('mongoose');
+  const jwt = require('jsonwebtoken');
 
-  var createJWTToken = (user, res) => {
+  const User = require('../user/user-model');
+
+  const createJWTToken = (user, res) => {
     var payload = {
       userId: user._id,
       // Seems odd, but ObjectId generates a random number we can use for the csrf Token
@@ -22,7 +24,7 @@ module.exports = (() => {
     return token;
   };
 
-  var buildDownloadToken = (uri) => {
+  const buildDownloadToken = (uri) => {
     var payload = {
       url: uri
     };
@@ -31,7 +33,7 @@ module.exports = (() => {
     return jwt.sign(payload, config.secrets.jwtSecret, { expiresIn: 60 * 5 });
   };
 
-  var verifyDownloadToken = (req, res, next) => {
+  const verifyDownloadToken = (req, res, next) => {
     var thisUrl = req.originalUrl;
     thisUrl = thisUrl.substring(0, thisUrl.indexOf('?'));
 
@@ -50,7 +52,7 @@ module.exports = (() => {
     }
   };
 
-  var processJWTToken = (req, res, next) => {
+  const processJWTToken = (req, res, next) => {
     var authorizationHeader = req.headers.authorization;
     if (! authorizationHeader) { return next(); }
 
@@ -69,7 +71,7 @@ module.exports = (() => {
     // Put the CSRF token in the request
     req.__csrfToken = payload.csrfToken;
 
-    User.findById(payload.userId).exec().
+    User.findById(payload.userId).
       then( (user) => {
         if (! user) { return res.status(403).send("Unknown user"); }
         req.current_user = user;
@@ -79,7 +81,7 @@ module.exports = (() => {
 
   };
 
-  var handleResourceAccess = (req, res, next) => {
+  const handleResourceAccess = (req, res, next) => {
     if (req.current_user) {
       // This means that someone has made a resource acess call.
       // This 'async' request has been authorized, so we need to
@@ -95,7 +97,7 @@ module.exports = (() => {
     }
   };
 
-  var verifyAuthenticated = (req, res, next) => {
+  const verifyAuthenticated = (req, res, next) => {
     if (req.current_user) {
       return next();
     }
@@ -103,7 +105,7 @@ module.exports = (() => {
     res.status(403).send('You are not permitted to perform this action.');
   };
 
-  var verifyRequest = (req, res, next) => {
+  const verifyRequest = (req, res, next) => {
     var csrfToken = req.headers["x-xsrf-token"];
 
     if (! csrfToken || csrfToken !== req.__csrfToken) {
@@ -112,7 +114,7 @@ module.exports = (() => {
     next();
   };
 
-  var mod = {
+  const mod = {
     createJWTToken: createJWTToken,
     processJWTToken: processJWTToken,
     verifyAuthenticated: verifyAuthenticated,

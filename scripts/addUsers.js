@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 require('../bootstrap');
+const User = require('../app/user/user-model');
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 mongoose.connect(config.database.url);
 

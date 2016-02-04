@@ -6,15 +6,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var requireDir = require('require-dir');
+var queueSVC = require('./app/utility/queue-service');
+var messageSVC = require('./app/utility/messaging-service');
 
-/**
- * Bring in the models, services and configurations
- */
 require('./bootstrap');
-
-// ##############################################################
-// Pull in all the controllers
-var controllers = requireDir('./routes');
 
 // ##############################################################
 // Mongoose settings
@@ -22,7 +17,6 @@ var controllers = requireDir('./routes');
 // Tell mongoose to use the ES6 Promise
 mongoose.Promise = global.Promise;
 
-// Connect. The URL should be externalized to a configuration file
 mongoose.connect(config.database.url);
 
 var app = express();
@@ -40,10 +34,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/', routes);
-app.use('/token', controllers.token);
-app.use('/users', controllers.users);
-app.use('/messages', controllers.messages);
-app.use('/documents', controllers.documents);
+app.use('/token', require('./app/token/token-controller'));
+app.use('/users', require('./app/user/user-controller'));
+app.use('/messages', require('./app/message/message-controller'));
+app.use('/documents', require('./app/document/document-controller'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -77,14 +71,14 @@ app.use(function(err, req, res, next) {
 });
 
 // Start up the beanstalk queuing
-queue.connect('listener', config.beanstalk.host, config.beanstalk.port).
+queueSVC.connect('listener', config.beanstalk.host, config.beanstalk.port).
   then( () => {
     console.log("Starting to listen on messageQueue");
-    queue.processJobsInTube('listener', 'messageQueue', messaging.messageQueueWorker).
+    queueSVC.processJobsInTube('listener', 'messageQueue', messageSVC.messageQueueWorker).
       then( () => console.log("--") );
   });
 
-queue.connect('talker', config.beanstalk.host, config.beanstalk.port).
+queueSVC.connect('talker', config.beanstalk.host, config.beanstalk.port).
   then( () => {
     console.log("Talker ready for speaking");
   });

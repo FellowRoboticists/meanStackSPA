@@ -1,5 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+
+const User = require('../user/user-model');
+const tokenMW = require('./token-middleware');
 
 /**
  * POST /token
@@ -12,7 +15,7 @@ var router = express.Router();
  */
 router.post('/', (req, res, next) => {
 
-  User.findOne({email: req.body.email}).exec().
+  User.findOne({email: req.body.email}).
     then( (user) => {
       if (! user) { return res.status(409).send("Invalid credentials"); }
       user.comparePassword(req.body.password, (err, valid) => {
@@ -22,7 +25,7 @@ router.post('/', (req, res, next) => {
           user: user
         };
         // Set up the cookies we need for authentication
-        authentication.createJWTToken(user, res);
+        tokenMW.createJWTToken(user, res);
         res.json(obj);
       });
     }).

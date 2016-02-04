@@ -1,13 +1,13 @@
 module.exports = (() => {
 
-  var mongoose = require('mongoose');
-  var Grid = require('gridfs-stream');
-  var fs = require('fs');
-  var concat = require('concat-stream');
+  const mongoose = require('mongoose');
+  const Grid = require('gridfs-stream');
+  const fs = require('fs');
+  const concat = require('concat-stream');
 
   Grid.mongo = mongoose.mongo;
 
-  var writeToGridFS = (filename, pathToStore, root) => {
+  const writeToGridFS = (filename, pathToStore, root) => {
     var gfs = Grid(mongoose.connection.db);
     return new Promise( (resolve, reject) => {
       var writeStream = gfs.createWriteStream({
@@ -24,7 +24,7 @@ module.exports = (() => {
     });
   };
 
-  var readFromGridFS = (gridFSFilename, destPath, root) => {
+  const readFromGridFS = (gridFSFilename, destPath, root) => {
     var gfs = Grid(mongoose.connection.db);
     return new Promise( (resolve, reject) => {
       var readStream = gfs.createReadStream({
@@ -41,7 +41,7 @@ module.exports = (() => {
     });
   };
 
-  var downloadFromGridFS = (gridFSFilename, root) => {
+  const downloadFromGridFS = (gridFSFilename, root) => {
     var gfs = Grid(mongoose.connection.db);
     return new Promise( (resolve, reject) => {
       var readStream = gfs.createReadStream({
@@ -60,7 +60,7 @@ module.exports = (() => {
     });
   };
 
-  var removeGridFSFile = (gridFSFilename, root) => {
+  const removeGridFSFile = (gridFSFilename, root) => {
     var gfs = Grid(mongoose.connection.db);
     return new Promise( (resolve, reject) => {
       gfs.remove({
@@ -73,7 +73,7 @@ module.exports = (() => {
     });
   };
 
-  var mod = {
+  const mod = {
     writeToGridFS: writeToGridFS,
     downloadFromGridFS: downloadFromGridFS,
     removeGridFSFile: removeGridFSFile

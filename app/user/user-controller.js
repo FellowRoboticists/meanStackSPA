@@ -1,5 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+
+const User = require('./user-model');
+const tokenMW = require('../token/token-middleware');
 
 /**
  * GET /users
@@ -9,11 +12,11 @@ var router = express.Router();
  * Caller must be authenticated.
  */
 router.get('/', 
-           authentication.processJWTToken,
-           authentication.verifyAuthenticated,
+           tokenMW.processJWTToken,
+           tokenMW.verifyAuthenticated,
            (req, res, next) => {
 
-  User.find({}).exec().
+  User.find({}).
     then( (users) => res.json(users) );
 });
 
@@ -24,7 +27,7 @@ router.get('/',
  */
 router.param('user', (req, res, next, id) => {
 
-  User.findById(id).exec().
+  User.findById(id).
     then( (user) => {
       if (! user) { return next(new Error("Unable to find user")); }
       req.user = user;
@@ -41,8 +44,8 @@ router.param('user', (req, res, next, id) => {
  * Caller must be authenticated.
  */
 router.get('/:user', 
-           authentication.processJWTToken,
-           authentication.verifyAuthenticated,
+           tokenMW.processJWTToken,
+           tokenMW.verifyAuthenticated,
            (req, res, next) => {
 
   res.json(req.user);
@@ -58,9 +61,9 @@ router.get('/:user',
  * Caller must be authenticated.
  */
 router.post('/', 
-            authentication.processJWTToken,
-            authentication.verifyAuthenticated,
-            authentication.verifyRequest,
+            tokenMW.processJWTToken,
+            tokenMW.verifyAuthenticated,
+            tokenMW.verifyRequest,
             (req, res, next) => {
 
   var user = new User(req.body);
@@ -68,7 +71,6 @@ router.post('/',
     save().
     then( (u) => User.
          find().
-         exec().
          then( (users) => res.json(users) ) 
     );
 });
@@ -83,9 +85,9 @@ router.post('/',
  * Caller must be authenticated.
  */
 router.put('/:user', 
-           authentication.processJWTToken,
-           authentication.verifyAuthenticated,
-           authentication.verifyRequest,
+           tokenMW.processJWTToken,
+           tokenMW.verifyAuthenticated,
+           tokenMW.verifyRequest,
            (req, res, next) => {
 
   var user = req.user;
@@ -117,9 +119,9 @@ router.put('/:user',
  * Caller must be authenticated.
  */
 router.delete('/:user', 
-              authentication.processJWTToken,
-              authentication.verifyAuthenticated,
-              authentication.verifyRequest,
+              tokenMW.processJWTToken,
+              tokenMW.verifyAuthenticated,
+              tokenMW.verifyRequest,
               (req, res, next) => {
 
   User.remove({ _id: req.user._id }).
