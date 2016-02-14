@@ -45,3 +45,5 @@ public/js
 
 # Ignore general PDF files on principle
 *.pdf
+# Ignore any pem files
+*.pem
